@@ -1,12 +1,14 @@
 import Container from " @/components/Container/Container";
 import Section from " @/components/Section/Section";
 
-export default function Home() {
+const page = () => {
   return (
     <Section>
       <Container>
-        <h1>Welcome BC-76</h1>
+        <h2>Tasks Page</h2>
       </Container>
     </Section>
   );
-}
+};
+
+export default page;

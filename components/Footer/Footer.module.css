@@ -1,0 +1,20 @@
+.footer {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.footer a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer img {
+  flex-shrink: 0;
+}
+
+.list {
+  display: flex;
+  gap: 24px;
+
+}
