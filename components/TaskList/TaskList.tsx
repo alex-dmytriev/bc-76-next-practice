@@ -1,7 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { Task } from "../../types/type";
+
 import css from "./TasksList.module.css";
-import { deleteTask } from "../../services/tasks";
+import { deleteTask } from " @/lib/api";
+import { Task } from " @/types/task";
+import Link from "next/link";
 
 interface TaskListProps {
   tasks: Task[];
@@ -23,6 +25,7 @@ const TaskList = ({ tasks }: TaskListProps) => {
           <p className={css.description}>{task.description}</p>
           <div className={css.footer}>
             <span className={css.status}>{task.status}</span>
+            <Link href={`/tasks/${task.id}`}>Details</Link>
             <button
               className={css.button}
               onClick={() => mutation.mutate(task.id)}
