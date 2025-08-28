@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Container from "../Container/Container";
 import css from "./Header.module.css";
+import StatusMenu from " @/components/StatusMenu/StatusMenu";
 
 const Header = () => {
   return (
@@ -12,7 +13,7 @@ const Header = () => {
               <Link href="/">Home</Link>
             </li>
             <li>
-              <Link href="/tasks">Tasks</Link>
+              <StatusMenu />
             </li>
           </ul>
         </nav>
