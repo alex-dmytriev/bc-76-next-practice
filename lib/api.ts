@@ -15,10 +15,11 @@ interface FetchedTasksResponse {
 
 export async function fetchedTasks(
   page: number,
-  search: string
+  search: string,
+  status: string,
 ): Promise<FetchedTasksResponse> {
   const { data } = await instance.get<FetchedTasksResponse>("/tasks", {
-    params: { perPage: 12, page, search },
+    params: { perPage: 12, page, search, status },
   });
   return data;
 }

@@ -9,22 +9,24 @@ import SearchBox from " @/components/SearchBox/SearchBox";
 import Pagination from " @/components/Pagination/Pagination";
 import TaskList from " @/components/TaskList/TaskList";
 import Loader from " @/components/Loader/Loader";
-import ErrorMessage from " @/components/ErrorMessage/ErrorMessage";
 import Modal from " @/components/Modal/Modal";
 import TaskForm from " @/components/TaskForm/TaskForm";
 
-const TasksClient = () => {
+interface TasksClientProps {
+  status: string;
+}
+
+const TasksClient = ({ status }: TasksClientProps) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
 
   const { data, isSuccess, isLoading } = useQuery({
-    queryKey: ["tasks", page, search],
-    queryFn: () => fetchedTasks(page, search),
+    queryKey: ["tasks", page, search, status],
+    queryFn: () => fetchedTasks(page, search, status),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
   });
-  console.log(isLoading);
 
   const handlePageChange = (page: number) => {
     setPage(page);
