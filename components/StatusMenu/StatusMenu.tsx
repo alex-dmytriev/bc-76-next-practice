@@ -25,7 +25,7 @@ export default function StatusMenu() {
       </button>
       {isOpen && (
         <ul className={css.menuList}>
-          {statusList.map((item, index) => (
+          {statusList.map((item) => (
             <li className={css.menuItem} key={item}>
               <Link
                 onClick={toggle}
