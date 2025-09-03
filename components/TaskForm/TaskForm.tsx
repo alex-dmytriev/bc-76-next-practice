@@ -1,85 +1,82 @@
-import { Field, Form, Formik, ErrorMessage, type FormikHelpers } from "formik";
-import * as Yup from "yup";
+"use client";
+
 import css from "./TaskForm.module.css";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createTask } from " @/lib/api";
+import { NewTask } from " @/types/task";
 
-interface FormValues {
-  title: string;
-  description: string;
-  status: string;
-}
+import { useRouter } from "next/navigation";
+import { useTaskDraftStore } from " @/lib/store/taskStore";
 
-interface TaskFormProps {
-  closeModal: () => void;
-}
-
-const ValidationSchema = Yup.object().shape({
-  title: Yup.string()
-    .min(2, "Title must have min 2 characters")
-    .max(10, "Title must have max 10 characters")
-    .required("Required"),
-  description: Yup.string()
-    .min(2, "Description must have min 2 characters")
-    .max(50, "Description must have max 50 characters")
-    .required("Required"),
-  status: Yup.string()
-    .oneOf(["todo", "in-progress", "review", "done", "blocked", "canceled"])
-    .required("Required"),
-});
-export default function TaskForm({ closeModal }: TaskFormProps) {
+export default function TaskForm() {
+  const router = useRouter();
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: createTask,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      closeModal();
+      router.back();
+      clearDraft();
     },
   });
-  const handleSubmit = (
-    values: FormValues,
-    actions: FormikHelpers<FormValues>
-  ) => {
+
+  const { draft, setDraft, clearDraft } = useTaskDraftStore();
+
+  const handleSubmit = (formData: FormData) => {
+    const values = Object.fromEntries(formData) as unknown as NewTask;
     mutation.mutate(values);
-    actions.resetForm();
   };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
+  ) => {
+    setDraft({
+      ...draft,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   return (
-    <Formik
-      validationSchema={ValidationSchema}
-      initialValues={{ title: "", description: "", status: "todo" }}
-      onSubmit={handleSubmit}
-    >
-      <Form className={css.form}>
-        <label className={css.formGroup}>
-          Title
-          <Field className={css.input} name="title" type="text" />
-          <ErrorMessage className={css.error} name="title" component="span" />
-        </label>
-        <label className={css.formGroup}>
-          Description
-          <Field className={css.input} name="description" type="text" />
-          <ErrorMessage
-            className={css.error}
-            name="description"
-            component="span"
-          />
-        </label>
-        <label className={css.formGroup}>
-          Status
-          <Field className={css.input} as="select" name="status" type="text">
-            <option value="todo">Todo</option>
-            <option value="in-progress">In progress</option>
-            <option value="review">Review</option>
-            <option value="done">Done</option>
-            <option value="blocked">Blocked</option>
-            <option value="canceled">Canceled</option>
-          </Field>
-          <ErrorMessage className={css.error} name="status" component="span" />
-        </label>
-        <button type="submit" className={css.submitButton}>
-          Submit
-        </button>
-      </Form>
-    </Formik>
+    <form className={css.form} action={handleSubmit}>
+      <label className={css.formGroup}>
+        Title
+        <input
+          className={css.input}
+          onChange={handleChange}
+          value={draft.title}
+          name="title"
+          type="text"
+        />
+      </label>
+      <label className={css.formGroup}>
+        Description
+        <input
+          className={css.input}
+          onChange={handleChange}
+          value={draft.description}
+          name="description"
+          type="text"
+        />
+      </label>
+      <label className={css.formGroup}>
+        Status
+        <select
+          className={css.input}
+          onChange={handleChange}
+          value={draft.status}
+          name="status"
+        >
+          <option value="todo">Todo</option>
+          <option value="in-progress">In progress</option>
+          <option value="review">Review</option>
+          <option value="done">Done</option>
+          <option value="blocked">Blocked</option>
+          <option value="canceled">Canceled</option>
+        </select>
+      </label>
+      <button type="submit" className={css.submitButton}>
+        Submit
+      </button>
+    </form>
   );
 }

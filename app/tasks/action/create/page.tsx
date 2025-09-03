@@ -1,3 +1,6 @@
+import Container from " @/components/Container/Container";
+import Section from " @/components/Section/Section";
+import TaskForm from " @/components/TaskForm/TaskForm";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -19,7 +22,13 @@ export const metadata: Metadata = {
 };
 
 const CreateTask = () => {
-  return <div>CreateTask</div>;
+  return (
+    <Section>
+      <Container>
+        <TaskForm />
+      </Container>
+    </Section>
+  );
 };
 
 export default CreateTask;
